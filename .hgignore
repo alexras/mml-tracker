@@ -1,0 +1,4 @@
+syntax: glob
+
+mml-tracker-gui-build-desktop/*
+mml-tracker-gui/mml-tracker-gui.pro.user
