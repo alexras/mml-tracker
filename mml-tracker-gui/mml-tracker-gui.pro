@@ -13,11 +13,15 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     spinboxwithlabel.cpp \
-    sequenceeditor.cpp
+    sequenceeditor.cpp \
+    sequenceeditormodel.cpp \
+    sequencetable.cpp
 
 HEADERS  += mainwindow.h \
     spinboxwithlabel.h \
-    sequenceeditor.h
+    sequenceeditor.h \
+    sequenceeditormodel.h \
+    sequencetable.h
 
 FORMS    += mainwindow.ui \
     spinboxwithlabel.ui \

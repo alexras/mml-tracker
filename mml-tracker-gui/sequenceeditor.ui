@@ -13,46 +13,90 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QToolButton" name="removeSequenceButton">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>210</y>
-     <width>27</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>-</string>
-   </property>
-  </widget>
-  <widget class="QColumnView" name="sequenceTable">
+  <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>311</width>
-     <height>192</height>
+     <width>371</width>
+     <height>271</height>
     </rect>
    </property>
-   <property name="resizeGripsVisible">
-    <bool>false</bool>
-   </property>
-  </widget>
-  <widget class="QToolButton" name="addSequenceButton">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>210</y>
-     <width>27</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>+</string>
-   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTableView" name="sequenceTableView"/>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="addSequenceButton">
+        <property name="text">
+         <string>+</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="removeSequenceButton">
+        <property name="text">
+         <string>-</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>addSequenceButton</sender>
+   <signal>clicked()</signal>
+   <receiver>SequenceEditor</receiver>
+   <slot>addRow()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>36</x>
+     <y>269</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>44</x>
+     <y>325</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>removeSequenceButton</sender>
+   <signal>clicked()</signal>
+   <receiver>SequenceEditor</receiver>
+   <slot>removeRow()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>95</x>
+     <y>262</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>91</x>
+     <y>300</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>addRow()</slot>
+  <slot>removeRow()</slot>
+ </slots>
 </ui>
