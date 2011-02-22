@@ -1,3 +1,3 @@
-FILE(GLOB GMESourceFiles "*.cc")
+FILE(GLOB GMESourceFiles "*.cpp")
 
 ADD_LIBRARY(gme ${GMESourceFiles})
