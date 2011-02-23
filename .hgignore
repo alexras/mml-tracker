@@ -6,3 +6,4 @@ Makefile
 cmake_install.cmake
 *.orig
 *.a
+src/gme_demo/gme_demo
