@@ -8,17 +8,21 @@ class Note;
 
 class Track {
 public:
-  Track();
+  Track(uint32_t trackID);
 
-  void setLength(uint64_t length);
-  uint64_t getLength() const;
+  uint32_t getTrackID() const;
+
+  void setLength(uint32_t length);
+  uint32_t getLength() const;
 
   const Note* getNotes() const;
 
-  void addNote(Note* note, uint64_t position);
+  void addNote(Note* note, uint32_t position);
 
 private:
-  uint64_t length;
+  const uint32_t trackID;
+
+  uint32_t length;
 
   std::vector<Note*> notes;
 };

@@ -2,19 +2,23 @@
 
 #include "Track.h"
 
-Track::Track() {
-  uint64_t length = 0;
+Track::Track(uint32_t _trackID) : trackID(_trackID) {
+  length = 0;
 }
 
-void Track::setLength(uint64_t length) {
+void Track::setLength(uint32_t length) {
   this->length = length;
 }
 
-uint64_t Track::getLength() const {
+uint32_t Track::getLength() const {
   return length;
 }
 
-void Track::addNote(Note* note, uint64_t position) {
+void Track::addNote(Note* note, uint32_t position) {
   assert(position < length);
   notes[position] = note;
+}
+
+uint32_t Track::getTrackID() const {
+  return trackID;
 }

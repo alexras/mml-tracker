@@ -24,10 +24,15 @@ public:
   const Instrument* getInstrument() const;
 
   void addEffect(Effect* effect);
+  void setSilence(bool silence);
 private:
   uint64_t octave;
   uint8_t pitch;
   uint64_t volume;
+
+  // If true, this note silences the currently-playing note, effectively
+  // "silencing" the track.
+  bool silence;
 
   Instrument* instrument;
   std::list<Effect*> effects;

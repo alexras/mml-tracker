@@ -1,3 +1,7 @@
 FILE(GLOB MMLTrackerSourceFiles "*.cc")
 
-ADD_EXECUTABLE(mml-tracker ${MMLTrackerSourceFiles})
+FIND_PACKAGE(Qt4 REQUIRED)
+include(${QT_USE_FILE})
+
+ADD_LIBRARY(tracker ${MMLTrackerSourceFiles})
+TARGET_LINK_LIBRARIES(tracker ${QT_LIBRARIES})

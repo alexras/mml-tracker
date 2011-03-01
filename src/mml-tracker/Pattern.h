@@ -1,14 +1,20 @@
 #ifndef MMLTRACKER_PATTERN_H
 #define MMLTRACKER_PATTERN_H
 
-#include "Track.h"
+#include <stdint.h>
+
+class Track;
 
 class Pattern {
 public:
-  Pattern(uint64_t numTracks);
+  Pattern(uint32_t numTracks);
   virtual ~Pattern();
-  
+
+  uint32_t getNumTracks() const;
+
+  Track* getTrack(uint32_t index) const;
 private:
+  uint32_t numTracks;
   Track** tracks;
 };
 

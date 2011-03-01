@@ -1,48 +1,58 @@
 #ifndef MMLTRACKER_SONG_H
 #define MMLTRACKER_SONG_H
 
+#include <QString>
 #include <stdint.h>
 #include <string>
 
+class Effect;
+class Instrument;
 class Sequence;
 
 class Song {
 public:
   Song();
 
-  void setSongName(const std::string& songName);
-  const std::string& getSongName() const;
+  void setSongName(const QString& songName);
+  const QString& getSongName() const;
 
-  void setArtist(const std::string& artist);
-  const std::string& getArtist() const;
+  void setArtist(const QString& artist);
+  const QString& getArtist() const;
 
-  void setMaker(const std::string& maker);
-  const std::string& getMaker() const;
+  void setMaker(const QString& maker);
+  const QString& getMaker() const;
 
-  void setTempo(uint64_t tempo);
-  uint64_t getTempo() const;
+  void setTempo(uint32_t tempo);
+  uint32_t getTempo() const;
 
-  void setSpeed(uint64_t speed);
-  uint64_t getSpeed() const;
+  void setSpeed(uint32_t speed);
+  uint32_t getSpeed() const;
 
-  const Sequence& getSequence() const;
+  void setSequence(Sequence* sequence);
+  const Sequence* getSequence() const;
 private:
-  Sequence sequence;
+  Sequence* sequence;
 
   // Name of the song
-  std::string song;
+  QString song;
 
   // Name of the artist
-  std::string artist;
+  QString artist;
 
   // "Maker" information - app used, copyright date, etc.
-  std::string maker;
+  QString maker;
 
   // Multiplier on tempo
-  uint64_t speed;
+  uint32_t speed;
 
   // Tempo of the song
-  uint64_t tempo;
+  uint32_t tempo;
+
+  // All effects used in the song
+  std::vector<Effect*> effects;
+
+  // All instruments used in the song
+  std::vector<Instrument*> instruments;
 };
 
 #endif // MMLTRACKER_SONG_H
