@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "SequenceEditorModel.h"
 #include "mml-tracker/Pattern.h"
 #include "mml-tracker/Sequence.h"
@@ -20,31 +22,79 @@ int SequenceEditorModel::columnCount(const QModelIndex & parent) const {
   return sequence.getNumTracks();
 }
 
+Pattern* SequenceEditorModel::getPattern(const QModelIndex& index) const {
+  int row = index.row();
+
+  if (row < 0) {
+    return NULL;
+  } else {
+    return sequence.getPattern(row);
+  }
+}
+
+Track* SequenceEditorModel::getTrack(const QModelIndex& index) const {
+  int col = index.column();
+
+  if (col < 0) {
+    return NULL;
+  }
+
+  Pattern* pattern = getPattern(index);
+
+  if (pattern == NULL) {
+    return NULL;
+  } else {
+    return pattern->getTrack(col);
+  }
+}
+
 QVariant SequenceEditorModel::data(const QModelIndex& index, int role) const {
   if (!index.isValid()) {
     return QVariant();
   }
 
-  int row = index.row();
-  int col = index.column();
-
-  if (row < 0 || col < 0) {
+  if (role != Qt::DisplayRole) {
     return QVariant();
   }
 
-  Pattern* pattern = sequence.getPattern(row);
-
-  if (pattern == NULL) {
-    return QVariant();
-  }
-
-  Track* track = pattern->getTrack(col);
+  Track* track = getTrack(index);
 
   if (track == NULL) {
     return QVariant();
+  } else {
+    return QString::number(track->getTrackID());
+  }
+}
+
+bool SequenceEditorModel::setData(
+  const QModelIndex& index, const QVariant& value, int role) {
+
+  if (role != Qt::EditRole) {
+    return false;
   }
 
-  return QString(track->getTrackID());
+  bool conversionSuccessful = false;
+  uint32_t trackID = value.toUInt(&conversionSuccessful);
+
+  if (!conversionSuccessful) {
+    return false;
+  }
+
+  Pattern* pattern = getPattern(index);
+
+  if (pattern == NULL) {
+    return false;
+  }
+
+  int patternTrackNumber = index.column();
+
+  Track* newTrack = sequence.getTrackBank().getTrack(trackID);
+
+  if (newTrack == NULL) {
+    return false;
+  }
+
+  pattern->setTrack(patternTrackNumber, newTrack);
 }
 
 QVariant SequenceEditorModel::headerData(
