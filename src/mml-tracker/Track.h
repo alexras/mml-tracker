@@ -19,6 +19,8 @@ public:
 
   void addNote(Note* note, uint32_t position);
 
+
+
 private:
   const uint32_t trackID;
 

@@ -4,8 +4,9 @@
 #include "Sequence.h"
 
 Sequence::Sequence(
-  uint32_t _numTracks, const std::vector<QString>& _trackNames)
-  : numTracks(_numTracks), trackNames(_trackNames) {
+  const TrackBank& _trackBank, uint32_t _numTracks,
+  const std::vector<QString>& _trackNames)
+  : trackBank(_trackBank), numTracks(_numTracks), trackNames(_trackNames) {
 }
 
 void Sequence::addNewPattern(uint32_t position) {
@@ -35,4 +36,8 @@ Pattern* Sequence::getPattern(uint32_t index) const {
 
 const QString& Sequence::getTrackName(uint32_t index) const {
   return trackNames[index];
+}
+
+const TrackBank& Sequence::getTrackBank() const {
+  return trackBank;
 }

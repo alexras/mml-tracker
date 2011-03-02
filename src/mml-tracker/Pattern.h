@@ -12,6 +12,9 @@ public:
 
   uint32_t getNumTracks() const;
 
+  void setTrack(uint32_t index,
+Track* track);
+
   Track* getTrack(uint32_t index) const;
 private:
   uint32_t numTracks;
