@@ -1,17 +1,21 @@
 #include <QSpinBox>
 
-#include "SequenceEditorItemSpinBoxDelegate.h"
+#include "ItemSpinBoxDelegate.h"
 
-SequenceEditorItemSpinBoxDelegate::SequenceEditorItemSpinBoxDelegate(
+ItemSpinBoxDelegate::ItemSpinBoxDelegate(
   QObject* parent)
   : QStyledItemDelegate(parent) {
 
 }
 
+ItemSpinBoxDelegate::~ItemSpinBoxDelegate() {
+
+}
+
 // Creates the editor widget used to edit the item at the given index
-QWidget* SequenceEditorItemSpinBoxDelegate::createEditor(
-  QWidget *parent, const QStyleOptionViewItem &option,
-  const QModelIndex &index) const {
+QWidget* ItemSpinBoxDelegate::createEditor(
+  QWidget* parent, const QStyleOptionViewItem& option,
+  const QModelIndex& index) const {
 
   QSpinBox* editor = new QSpinBox(parent);
   // FIXME: these values should be sensible given the patterns currently
@@ -23,7 +27,7 @@ QWidget* SequenceEditorItemSpinBoxDelegate::createEditor(
 }
 
 // Called when an editor is created to initialize it with data from the model
-void SequenceEditorItemSpinBoxDelegate::setEditorData(
+void ItemSpinBoxDelegate::setEditorData(
   QWidget* editor, const QModelIndex& index) const {
 
   int value = index.model()->data(index, Qt::EditRole).toInt();
@@ -33,7 +37,7 @@ void SequenceEditorItemSpinBoxDelegate::setEditorData(
 }
 
 // Called when editing is finished to commit data from the editor to the model
-void SequenceEditorItemSpinBoxDelegate::setModelData(
+void ItemSpinBoxDelegate::setModelData(
   QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const {
 
   QSpinBox* spinBox = static_cast<QSpinBox*>(editor);
@@ -47,7 +51,7 @@ void SequenceEditorItemSpinBoxDelegate::setModelData(
   model->setData(index, value, Qt::EditRole);
 }
 
-void SequenceEditorItemSpinBoxDelegate::updateEditorGeometry(
+void ItemSpinBoxDelegate::updateEditorGeometry(
   QWidget* editor, const QStyleOptionViewItem& option,
   const QModelIndex& index) const {
 
