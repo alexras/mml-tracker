@@ -8,3 +8,6 @@ cmake_install.cmake
 *.a
 src/gme_demo/gme_demo
 src/mml-tracker/mml-tracker
+src/tests/sequence_editor_test
+moc_*.cxx
+
