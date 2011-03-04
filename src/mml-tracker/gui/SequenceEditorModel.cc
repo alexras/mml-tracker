@@ -19,7 +19,8 @@ int SequenceEditorModel::rowCount(const QModelIndex & parent) const {
 int SequenceEditorModel::columnCount(const QModelIndex & parent) const {
   Q_UNUSED(parent);
 
-  return sequence.getNumTracks();
+  // One additional column for the sequence number
+  return sequence.getNumTracks() + 1;
 }
 
 Pattern* SequenceEditorModel::getPattern(const QModelIndex& index) const {
@@ -33,7 +34,7 @@ Pattern* SequenceEditorModel::getPattern(const QModelIndex& index) const {
 }
 
 Track* SequenceEditorModel::getTrack(const QModelIndex& index) const {
-  int col = index.column();
+  int col = index.column() - 1;
 
   if (col < 0) {
     return NULL;
@@ -57,8 +58,11 @@ QVariant SequenceEditorModel::data(const QModelIndex& index, int role) const {
     return QVariant();
   }
 
-  Track* track = getTrack(index);
+  if (index.column() == 0) {
+    return QString("%1").arg(index.row(), 2, 16, QChar('0')).toUpper();
+  }
 
+  Track* track = getTrack(index);
   if (track == NULL) {
     return QVariant();
   } else {
@@ -99,22 +103,25 @@ bool SequenceEditorModel::setData(
 
 QVariant SequenceEditorModel::headerData(
   int section, Qt::Orientation orientation, int role) const {
+  // // If you're not displaying, I don't care.
+  // if (role != Qt::DisplayRole) {
+  //   return QVariant();
+  // }
 
-  // If you're not displaying, I don't care.
-  if (role != Qt::DisplayRole) {
-    return QVariant();
-  }
-
-  if (section >= sequence.getNumTracks()) {
-    return QVariant();
-  }
-
-  if (orientation == Qt::Horizontal) {
-    // tr() == translate
-    return QString(sequence.getTrackName(section));
-  } else {
-    return QVariant();
-  }
+  // if (orientation == Qt::Horizontal) {
+  //   if (section >= sequence.getNumTracks() + 1) {
+  //     return QVariant();
+  //   } else {
+  //     if (section == 0) {
+  //       return QString("");
+  //     } else {
+  //       return QString(sequence.getTrackName(section - 1));
+  //     }
+  //   }
+  // } else {
+  //   return QVariant();
+  // }
+  return QVariant();
 }
 
 Qt::ItemFlags SequenceEditorModel::flags(const QModelIndex& index) const {
@@ -127,36 +134,16 @@ Qt::ItemFlags SequenceEditorModel::flags(const QModelIndex& index) const {
   }
 }
 
-bool SequenceEditorModel::insertRows(int position, int rows,
-                                     const QModelIndex& index) {
-  Q_UNUSED(index);
-
-  // Make sure connected views are aware that we are adding rows
-
-  // FIXME: Not sure I shouldn't be using 'index' instead of creating a new
-  // object here
-  beginInsertRows(QModelIndex(), position, position + rows - 1);
-
-  for (int row = 0; row < rows; row++) {
-    sequence.addNewPattern(position);
-  }
-
+bool SequenceEditorModel::insertRow(uint32_t row) {
+  beginInsertRows(QModelIndex(), row, row);
+  sequence.addNewPattern(row);
   endInsertRows();
   return true;
 }
 
-bool SequenceEditorModel::removeRows(int position, int rows,
-                                     const QModelIndex& index) {
-  Q_UNUSED(index);
-
-  // FIXME: Not sure I shouldn't be using 'index' instead of creating a new
-  // object here
-  beginRemoveRows(QModelIndex(), position, position + rows - 1);
-
-  for (int row = 0; row < rows; row++) {
-    sequence.removePattern(position);
-  }
-
+bool SequenceEditorModel::removeRow(uint32_t row) {
+  beginRemoveRows(QModelIndex(), row, row);
+  sequence.removePattern(row);
   endRemoveRows();
   return true;
 }

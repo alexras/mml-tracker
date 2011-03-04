@@ -2,6 +2,7 @@
 #define MMLTRACKER_SEQUENCE_EDITOR_MODEL_H
 
 #include <QAbstractTableModel>
+#include <stdint.h>
 
 class Pattern;
 class Sequence;
@@ -21,10 +22,8 @@ public:
   // Returns any flags on the given item
   Qt::ItemFlags flags(const QModelIndex& index) const;
 
-  bool insertRows(int position, int rows,
-                  const QModelIndex& index=QModelIndex());
-  bool removeRows(int position, int rows,
-                  const QModelIndex& index=QModelIndex());
+  bool insertRow(uint32_t row);
+  bool removeRow(uint32_t row);
 
 private:
   Sequence& sequence;

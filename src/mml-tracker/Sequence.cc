@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cassert>
 
 #include "Pattern.h"
 #include "Sequence.h"
@@ -35,6 +36,8 @@ Pattern* Sequence::getPattern(uint32_t index) const {
 }
 
 const QString& Sequence::getTrackName(uint32_t index) const {
+  assert(index < trackNames.size());
+
   return trackNames[index];
 }
 

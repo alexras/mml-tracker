@@ -5,8 +5,7 @@
 #include "mml-tracker/Pattern.h"
 #include "mml-tracker/Sequence.h"
 #include "mml-tracker/TrackBank.h"
-#include "mml-tracker/gui/ItemSpinBoxDelegate.h"
-#include "mml-tracker/gui/SequenceEditorModel.h"
+#include "mml-tracker/gui/SequenceEditor.h"
 
 int main(int argc, char** argv) {
   QApplication app(argc, argv);
@@ -30,16 +29,8 @@ int main(int argc, char** argv) {
       pattern->setTrack(j, trackBank.newTrack());
     }
   }
-
-  QTableView tableView;
-
-  SequenceEditorModel model(sequence);
-  tableView.setModel(&model);
-
-  ItemSpinBoxDelegate delegate;
-  tableView.setItemDelegate(&delegate);
-
-  tableView.setWindowTitle(QObject::tr("Sequence Editor Test"));
-  tableView.show();
+  SequenceEditor sequenceEditor(sequence);
+  sequenceEditor.setWindowTitle(QObject::tr("Sequence Editor Test"));
+  sequenceEditor.show();
   return app.exec();
 }
