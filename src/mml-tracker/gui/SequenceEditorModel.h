@@ -22,8 +22,8 @@ public:
   // Returns any flags on the given item
   Qt::ItemFlags flags(const QModelIndex& index) const;
 
-  bool insertRow(uint32_t row);
-  bool removeRow(uint32_t row);
+  void insertRows(QSet<uint32_t>& rows);
+  void removeRows(QSet<uint32_t>& rows);
 
 private:
   Sequence& sequence;
@@ -33,6 +33,9 @@ private:
 
   // Gets the track corresponding to the row and column referenced by theindex
   Track* getTrack(const QModelIndex& index) const;
+
+  void getPatternsFromRowNumbers(QSet<uint32_t>& rows, QSet<Pattern*>& patterns,
+                                 uint32_t& minRow, uint32_t& maxRow);
 };
 
 #endif // MMLTRACKER_SEQUENCE_EDITOR_MODEL_H

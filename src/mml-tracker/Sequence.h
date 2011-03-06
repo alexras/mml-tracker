@@ -2,6 +2,7 @@
 #define MMLTRACKER_SEQUENCE_H
 
 #include <QString>
+#include <list>
 #include <stdint.h>
 #include <vector>
 
@@ -14,8 +15,14 @@ public:
   Sequence(const TrackBank& trackBank, uint32_t numTracks,
            const std::vector<QString>& trackNames);
 
-  void addNewPattern(uint32_t position);
-  void removePattern(uint32_t position);
+  void addNewPatternAfter(Pattern* nextPattern);
+  void removePattern(Pattern* pattern);
+
+  // Adds a new pattern to the end of the pattern list
+  void addNewPattern();
+
+  // Removes the last pattern from the pattern list
+  void removeLastPattern();
 
   uint32_t getNumPatterns() const;
   uint32_t getNumTracks() const;

@@ -1,4 +1,6 @@
-#include <iostream>
+#include <QSet>
+#include <assert.h>
+#include <limits>
 
 #include "SequenceEditorModel.h"
 #include "mml-tracker/Pattern.h"
@@ -54,7 +56,10 @@ QVariant SequenceEditorModel::data(const QModelIndex& index, int role) const {
     return QVariant();
   }
 
-  if (role != Qt::DisplayRole) {
+  if (role == Qt::UserRole) {
+    // The view's delegate is asking us for the maximum value for this cell.
+    return QVariant(sequence.getTrackBank().getLargestTrackNumber());
+  } else if (role != Qt::DisplayRole) {
     return QVariant();
   }
 
@@ -90,7 +95,7 @@ bool SequenceEditorModel::setData(
     return false;
   }
 
-  int patternTrackNumber = index.column();
+  int patternTrackNumber = index.column() - 1;
 
   Track* newTrack = sequence.getTrackBank().getTrack(trackID);
 
@@ -129,21 +134,83 @@ Qt::ItemFlags SequenceEditorModel::flags(const QModelIndex& index) const {
     // If the index is invalid, return some dummy flag
     return Qt::ItemIsEnabled;
   } else {
-    // Otherwise, note that the item is editable.
-    return QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
+    // Pattern headers aren't selectable but not editable
+    if (index.column() == 0) {
+      return Qt::ItemIsEnabled;
+    } else {
+      // Otherwise, note that the item is editable.
+      return QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
+    }
   }
 }
 
-bool SequenceEditorModel::insertRow(uint32_t row) {
-  beginInsertRows(QModelIndex(), row, row);
-  sequence.addNewPattern(row);
-  endInsertRows();
-  return true;
+void SequenceEditorModel::getPatternsFromRowNumbers(
+  QSet<uint32_t>& rows, QSet<Pattern*>& patterns, uint32_t& minRow,
+  uint32_t& maxRow) {
+
+  minRow = std::numeric_limits<uint32_t>::max();
+  maxRow = 0;
+
+  for (QSet<uint32_t>::iterator iter = rows.begin(); iter != rows.end();
+       iter++) {
+    uint32_t currentRow = *iter;
+
+    minRow = std::min<uint32_t>(currentRow, minRow);
+    maxRow = std::max<uint32_t>(currentRow, maxRow);
+
+    Pattern* pattern = sequence.getPattern(currentRow);
+    assert(pattern != NULL);
+    patterns.insert(pattern);
+  }
 }
 
-bool SequenceEditorModel::removeRow(uint32_t row) {
-  beginRemoveRows(QModelIndex(), row, row);
-  sequence.removePattern(row);
-  endRemoveRows();
-  return true;
+void SequenceEditorModel::insertRows(QSet<uint32_t>& rows) {
+  if (rows.size() == 0) {
+    uint32_t lastRow = sequence.getNumPatterns() - 1;
+
+    beginInsertRows(QModelIndex(), lastRow, lastRow);
+    sequence.addNewPattern();
+    endInsertRows();
+  } else {
+    QSet<Pattern*> patterns;
+    uint32_t minRow;
+    uint32_t maxRow;
+
+    getPatternsFromRowNumbers(rows, patterns, minRow, maxRow);
+
+    beginInsertRows(QModelIndex(), minRow, maxRow);
+
+    for (QSet<Pattern*>::iterator iter = patterns.begin();
+         iter != patterns.end(); iter++) {
+
+      sequence.addNewPatternAfter(*iter);
+    }
+
+    endInsertRows();
+  }
+}
+
+void SequenceEditorModel::removeRows(QSet<uint32_t>& rows) {
+  if (rows.size() == 0) {
+    uint32_t lastRow = sequence.getNumPatterns() - 1;
+
+    beginRemoveRows(QModelIndex(), lastRow, lastRow);
+    sequence.removeLastPattern();
+    endRemoveRows();
+  } else {
+    QSet<Pattern*> patterns;
+    uint32_t minRow;
+    uint32_t maxRow;
+
+    getPatternsFromRowNumbers(rows, patterns, minRow, maxRow);
+
+    beginRemoveRows(QModelIndex(), minRow, maxRow);
+
+    for (QSet<Pattern*>::iterator iter = patterns.begin();
+         iter != patterns.end(); iter++) {
+      sequence.removePattern(*iter);
+    }
+
+    endRemoveRows();
+  }
 }

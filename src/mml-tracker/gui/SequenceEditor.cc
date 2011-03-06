@@ -4,15 +4,14 @@
 #include <QSpacerItem>
 #include <QTableView>
 #include <QVBoxLayout>
-#include <iostream>
 
 #include "SequenceEditor.h"
 #include "mml-tracker/Sequence.h"
 #include "mml-tracker/gui/ItemSpinBoxDelegate.h"
 #include "mml-tracker/gui/SequenceEditorModel.h"
 
-SequenceEditor::SequenceEditor(Sequence& _sequence, QWidget* parent)
-  : QWidget(parent), sequence(_sequence) {
+SequenceEditor::SequenceEditor(Sequence& sequence, QWidget* parent)
+  : QWidget(parent) {
 
   model = new SequenceEditorModel(sequence);
   ItemSpinBoxDelegate* delegate = new ItemSpinBoxDelegate(this);
@@ -56,31 +55,12 @@ void SequenceEditor::getSelectedRows(QSet<uint32_t>& rowSet) {
 void SequenceEditor::addSequence() {
   QSet<uint32_t> rowSet;
   getSelectedRows(rowSet);
-
-  if (rowSet.size() == 0) {
-    uint32_t patternID = sequence.getNumPatterns();
-    model->insertRow(patternID);
-  } else {
-    for (QSet<uint32_t>::iterator iter = rowSet.begin(); iter != rowSet.end();
-         iter++) {
-      model->insertRow(*iter);
-    }
-  }
+  model->insertRows(rowSet);
 }
 
 void SequenceEditor::removeSequence() {
   QSet<uint32_t> rowSet;
   getSelectedRows(rowSet);
-
-  if (rowSet.size() == 0) {
-    // No indices selected; just remove the last row
-    uint32_t patternID = sequence.getNumPatterns() - 1;
-    model->removeRow(patternID);
-  } else {
-    for (QSet<uint32_t>::iterator iter = rowSet.begin(); iter != rowSet.end();
-         iter++) {
-      model->removeRow(*iter);
-    }
-  }
+  model->removeRows(rowSet);
 }
 

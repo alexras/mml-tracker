@@ -10,13 +10,36 @@ Sequence::Sequence(
   : trackBank(_trackBank), numTracks(_numTracks), trackNames(_trackNames) {
 }
 
-void Sequence::addNewPattern(uint32_t position) {
+void Sequence::addNewPatternAfter(Pattern* nextPattern) {
   Pattern* pattern = new Pattern(numTracks);
-  patterns.insert(patterns.begin() + position, pattern);
+
+  for (std::vector<Pattern*>::iterator iter = patterns.begin();
+       iter != patterns.end(); iter++) {
+    if (*iter == nextPattern) {
+      patterns.insert(iter + 1, pattern);
+      break;
+    }
+  }
 }
 
-void Sequence::removePattern(uint32_t position) {
-  patterns.erase(patterns.begin() + position);
+void Sequence::removePattern(Pattern* pattern) {
+  for (std::vector<Pattern*>::iterator iter = patterns.begin();
+       iter != patterns.end(); iter++) {
+    if (*iter == pattern) {
+      patterns.erase(iter);
+      break;
+    }
+  }
+}
+
+void Sequence::addNewPattern() {
+  patterns.push_back(new Pattern(numTracks));
+}
+
+void Sequence::removeLastPattern() {
+  std::vector<Pattern*>::iterator iter = patterns.end();
+  iter--;
+  patterns.erase(iter);
 }
 
 uint32_t Sequence::getNumPatterns() const {

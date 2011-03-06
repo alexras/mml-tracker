@@ -19,8 +19,6 @@ public slots:
   void removeSequence();
 
 private:
-  Sequence& sequence;
-
   QTableView* tableView;
   SequenceEditorModel* model;
 

@@ -16,11 +16,11 @@ int main(int argc, char** argv) {
   trackNames.push_back(QObject::tr("Track3"));
 
   TrackBank trackBank;
-
   Sequence sequence(trackBank, 3, trackNames);
-  sequence.addNewPattern(0);
-
-  sequence.addNewPattern(0);
+  sequence.addNewPattern();
+  sequence.addNewPattern();
+  sequence.addNewPattern();
+  sequence.addNewPattern();
 
   for (uint32_t i = 0; i < sequence.getNumPatterns(); i++) {
     Pattern* pattern = sequence.getPattern(i);
