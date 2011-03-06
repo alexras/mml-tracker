@@ -1,3 +1,5 @@
+#include <assert.h>
+
 #include "Track.h"
 #include "TrackBank.h"
 
@@ -17,4 +19,9 @@ Track* TrackBank::getTrack(uint32_t id) const {
   } else {
     return tracks[id];
   }
+}
+
+uint32_t TrackBank::getLargestTrackNumber() const {
+  assert(guid > 0);
+  return guid - 1;
 }

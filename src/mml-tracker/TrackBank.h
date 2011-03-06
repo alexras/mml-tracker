@@ -15,6 +15,8 @@ public:
   Track* newTrack();
 
   Track* getTrack(uint32_t id) const;
+
+  uint32_t getLargestTrackNumber() const;
 private:
   uint32_t guid;
   std::vector<Track*> tracks;
