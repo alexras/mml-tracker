@@ -2,6 +2,7 @@
 #define MMLTRACKER_PATTERN_H
 
 #include <stdint.h>
+#include <string>
 
 class Track;
 
