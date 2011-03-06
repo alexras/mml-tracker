@@ -18,10 +18,7 @@ QWidget* ItemSpinBoxDelegate::createEditor(
   const QModelIndex& index) const {
 
   QSpinBox* editor = new QSpinBox(parent);
-  // FIXME: these values should be sensible given the patterns currently
-  // installed
   editor->setMinimum(0);
-  editor->setMaximum(100);
 
   return editor;
 }
@@ -32,7 +29,7 @@ void ItemSpinBoxDelegate::setEditorData(
 
   int value = index.model()->data(index, Qt::EditRole).toInt();
   QSpinBox* spinBox = static_cast<QSpinBox*>(editor);
-
+  spinBox->setMaximum(index.model()->data(index, Qt::UserRole).toUInt());
   spinBox->setValue(value);
 }
 
