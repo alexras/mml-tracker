@@ -1,5 +1,4 @@
-#include <QSpinBox>
-
+#include "HexSpinBox.h"
 #include "ItemSpinBoxDelegate.h"
 
 ItemSpinBoxDelegate::ItemSpinBoxDelegate(
@@ -17,7 +16,7 @@ QWidget* ItemSpinBoxDelegate::createEditor(
   QWidget* parent, const QStyleOptionViewItem& option,
   const QModelIndex& index) const {
 
-  QSpinBox* editor = new QSpinBox(parent);
+  HexSpinBox* editor = new HexSpinBox(parent);
   editor->setMinimum(0);
 
   return editor;
@@ -27,8 +26,18 @@ QWidget* ItemSpinBoxDelegate::createEditor(
 void ItemSpinBoxDelegate::setEditorData(
   QWidget* editor, const QModelIndex& index) const {
 
-  int value = index.model()->data(index, Qt::EditRole).toInt();
-  QSpinBox* spinBox = static_cast<QSpinBox*>(editor);
+  QVariant valueObj = index.model()->data(index, Qt::EditRole);
+
+  int value;
+
+  if (valueObj.isValid()) {
+    bool ok = false;
+    value = valueObj.toString().toInt(&ok, 16);
+  } else {
+    value = 0;
+  }
+
+  HexSpinBox* spinBox = static_cast<HexSpinBox*>(editor);
   spinBox->setMaximum(index.model()->data(index, Qt::UserRole).toUInt());
   spinBox->setValue(value);
 }
@@ -37,7 +46,7 @@ void ItemSpinBoxDelegate::setEditorData(
 void ItemSpinBoxDelegate::setModelData(
   QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const {
 
-  QSpinBox* spinBox = static_cast<QSpinBox*>(editor);
+  HexSpinBox* spinBox = static_cast<HexSpinBox*>(editor);
 
   // Interprets the data in the spinbox. If the value has changed since last
   // interpretation it will emit signals.

@@ -59,7 +59,7 @@ QVariant SequenceEditorModel::data(const QModelIndex& index, int role) const {
   if (role == Qt::UserRole) {
     // The view's delegate is asking us for the maximum value for this cell.
     return QVariant(sequence.getTrackBank().getLargestTrackNumber());
-  } else if (role != Qt::DisplayRole) {
+  } else if (role != Qt::DisplayRole && role != Qt::EditRole) {
     return QVariant();
   }
 
@@ -71,7 +71,7 @@ QVariant SequenceEditorModel::data(const QModelIndex& index, int role) const {
   if (track == NULL) {
     return QVariant();
   } else {
-    return QString::number(track->getTrackID());
+    return QString("%1").arg(track->getTrackID(), 2, 16, QChar('0')).toUpper();
   }
 }
 
