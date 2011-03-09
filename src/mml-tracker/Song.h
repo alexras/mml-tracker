@@ -4,14 +4,20 @@
 #include <QString>
 #include <stdint.h>
 #include <string>
+#include <vector>
 
 class Effect;
 class Instrument;
+class PlatformInfo;
 class Sequence;
+class TrackBank;
 
 class Song {
 public:
-  Song();
+  Song(const PlatformInfo& platformInfo);
+  virtual ~Song();
+
+  const PlatformInfo& getPlatformInfo() const;
 
   void setSongName(const QString& songName);
   const QString& getSongName() const;
@@ -29,12 +35,21 @@ public:
   uint32_t getSpeed() const;
 
   void setSequence(Sequence* sequence);
-  const Sequence* getSequence() const;
+  Sequence* getSequence() const;
+
+  void setTrackBank(TrackBank* tracks);
+  TrackBank* getTrackBank() const;
 private:
+  const PlatformInfo& platformInfo;
+
+  // The sequence of patterns making up the song
   Sequence* sequence;
 
+  // Bank of all tracks used in the song
+  TrackBank* tracks;
+
   // Name of the song
-  QString song;
+  QString title;
 
   // Name of the artist
   QString artist;

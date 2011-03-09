@@ -1,18 +1,22 @@
-#ifndef MMLTRACKER_SEQUENCE_EDITOR_MODEL_H
-#define MMLTRACKER_SEQUENCE_EDITOR_MODEL_H
+#ifndef MMLTRACKER_SEQUENCE_MODEL_H
+#define MMLTRACKER_SEQUENCE_MODEL_H
 
 #include <QAbstractTableModel>
 #include <stdint.h>
 
 class Pattern;
+class PlatformInfo;
 class Sequence;
 class Track;
+class TrackBank;
 
-class SequenceEditorModel : public QAbstractTableModel {
+class SequenceModel : public QAbstractTableModel {
 Q_OBJECT
 
 public:
-  SequenceEditorModel(Sequence& sequence, QObject* parent = NULL);
+  SequenceModel(Sequence& sequence, TrackBank& trackBank,
+                const PlatformInfo& platformInfo,
+                QObject* parent = NULL);
   int rowCount(const QModelIndex & parent) const;
   int columnCount(const QModelIndex & parent) const;
   QVariant data(const QModelIndex& index, int role) const;
@@ -26,7 +30,9 @@ public:
   void removeRows(QSet<uint32_t>& rows);
 
 private:
+  const PlatformInfo& platformInfo;
   Sequence& sequence;
+  TrackBank& trackBank;
 
   // Gets the pattern corresponding to the row referenced by the index
   Pattern* getPattern(const QModelIndex& index) const;
@@ -38,4 +44,4 @@ private:
                                  uint32_t& minRow, uint32_t& maxRow);
 };
 
-#endif // MMLTRACKER_SEQUENCE_EDITOR_MODEL_H
+#endif // MMLTRACKER_SEQUENCE_MODEL_H

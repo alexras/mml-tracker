@@ -1,20 +1,36 @@
 #include <QObject>
 #include <QString>
 
+#include "PlatformInfo.h"
 #include "Sequence.h"
 #include "Song.h"
 
-Song::Song()
-  : song(QObject::tr("Song Name")), artist(QObject::tr("Artist")),
-    maker(QObject::tr("Maker")) {
+Song::Song(const PlatformInfo& _platformInfo)
+  : platformInfo(_platformInfo), title(QObject::tr("Song Name")),
+    artist(QObject::tr("Artist")), maker(QObject::tr("Maker")) {
+
+  tempo = platformInfo.getDefaultTempo();
+  speed = platformInfo.getDefaultSpeed();
+  sequence = NULL;
+  tracks = NULL;
+}
+
+Song::~Song() {
+  if (sequence != NULL) {
+    delete sequence;
+  }
+
+  if (tracks != NULL) {
+    delete tracks;
+  }
 }
 
 void Song::setSongName(const QString& songName) {
-  song = songName;
+  title = songName;
 }
 
 const QString& Song::getSongName() const {
-  return song;
+  return title;
 }
 
 void Song::setArtist(const QString& artist) {
@@ -53,6 +69,14 @@ void Song::setSequence(Sequence* sequence) {
   this->sequence = sequence;
 }
 
-const Sequence* Song::getSequence() const {
+Sequence* Song::getSequence() const {
   return sequence;
+}
+
+void Song::setTrackBank(TrackBank* tracks) {
+  this->tracks = tracks;
+}
+
+TrackBank* Song::getTrackBank() const {
+  return tracks;
 }

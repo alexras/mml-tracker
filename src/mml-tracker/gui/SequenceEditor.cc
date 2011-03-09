@@ -8,12 +8,12 @@
 #include "SequenceEditor.h"
 #include "mml-tracker/Sequence.h"
 #include "mml-tracker/gui/ItemSpinBoxDelegate.h"
-#include "mml-tracker/gui/SequenceEditorModel.h"
+#include "mml-tracker/gui/SequenceModel.h"
 
-SequenceEditor::SequenceEditor(Sequence& sequence, QWidget* parent)
+SequenceEditor::SequenceEditor(SequenceModel* model, QWidget* parent)
   : QWidget(parent) {
 
-  model = new SequenceEditorModel(sequence);
+  this->model = model;
   ItemSpinBoxDelegate* delegate = new ItemSpinBoxDelegate(this);
 
   tableView = new QTableView(this);

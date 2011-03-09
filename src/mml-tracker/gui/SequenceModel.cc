@@ -2,30 +2,34 @@
 #include <assert.h>
 #include <limits>
 
-#include "SequenceEditorModel.h"
+#include "SequenceModel.h"
 #include "mml-tracker/Pattern.h"
+#include "mml-tracker/PlatformInfo.h"
 #include "mml-tracker/Sequence.h"
 #include "mml-tracker/Track.h"
 
-SequenceEditorModel::SequenceEditorModel(Sequence& _sequence,
-                                         QObject* parent)
-  : QAbstractTableModel(parent), sequence(_sequence) {
+SequenceModel::SequenceModel(Sequence& _sequence,
+                             TrackBank& _trackBank,
+                             const PlatformInfo& _platformInfo,
+                             QObject* parent)
+  : QAbstractTableModel(parent), platformInfo(_platformInfo),
+    sequence(_sequence), trackBank(_trackBank) {
 }
 
-int SequenceEditorModel::rowCount(const QModelIndex & parent) const {
+int SequenceModel::rowCount(const QModelIndex & parent) const {
   Q_UNUSED(parent);
 
   return sequence.getNumPatterns();
 }
 
-int SequenceEditorModel::columnCount(const QModelIndex & parent) const {
+int SequenceModel::columnCount(const QModelIndex & parent) const {
   Q_UNUSED(parent);
 
   // One additional column for the sequence number
-  return sequence.getNumTracks() + 1;
+  return platformInfo.getNumChannels() + 1;
 }
 
-Pattern* SequenceEditorModel::getPattern(const QModelIndex& index) const {
+Pattern* SequenceModel::getPattern(const QModelIndex& index) const {
   int row = index.row();
 
   if (row < 0) {
@@ -35,7 +39,7 @@ Pattern* SequenceEditorModel::getPattern(const QModelIndex& index) const {
   }
 }
 
-Track* SequenceEditorModel::getTrack(const QModelIndex& index) const {
+Track* SequenceModel::getTrack(const QModelIndex& index) const {
   int col = index.column() - 1;
 
   if (col < 0) {
@@ -51,14 +55,14 @@ Track* SequenceEditorModel::getTrack(const QModelIndex& index) const {
   }
 }
 
-QVariant SequenceEditorModel::data(const QModelIndex& index, int role) const {
+QVariant SequenceModel::data(const QModelIndex& index, int role) const {
   if (!index.isValid()) {
     return QVariant();
   }
 
   if (role == Qt::UserRole) {
     // The view's delegate is asking us for the maximum value for this cell.
-    return QVariant(sequence.getTrackBank().getLargestTrackNumber());
+    return QVariant(trackBank.getLargestTrackNumber());
   } else if (role != Qt::DisplayRole && role != Qt::EditRole) {
     return QVariant();
   }
@@ -75,7 +79,7 @@ QVariant SequenceEditorModel::data(const QModelIndex& index, int role) const {
   }
 }
 
-bool SequenceEditorModel::setData(
+bool SequenceModel::setData(
   const QModelIndex& index, const QVariant& value, int role) {
 
   if (role != Qt::EditRole) {
@@ -97,7 +101,7 @@ bool SequenceEditorModel::setData(
 
   int patternTrackNumber = index.column() - 1;
 
-  Track* newTrack = sequence.getTrackBank().getTrack(trackID);
+  Track* newTrack = trackBank.getTrack(trackID);
 
   if (newTrack == NULL) {
     return false;
@@ -106,30 +110,12 @@ bool SequenceEditorModel::setData(
   pattern->setTrack(patternTrackNumber, newTrack);
 }
 
-QVariant SequenceEditorModel::headerData(
+QVariant SequenceModel::headerData(
   int section, Qt::Orientation orientation, int role) const {
-  // // If you're not displaying, I don't care.
-  // if (role != Qt::DisplayRole) {
-  //   return QVariant();
-  // }
-
-  // if (orientation == Qt::Horizontal) {
-  //   if (section >= sequence.getNumTracks() + 1) {
-  //     return QVariant();
-  //   } else {
-  //     if (section == 0) {
-  //       return QString("");
-  //     } else {
-  //       return QString(sequence.getTrackName(section - 1));
-  //     }
-  //   }
-  // } else {
-  //   return QVariant();
-  // }
   return QVariant();
 }
 
-Qt::ItemFlags SequenceEditorModel::flags(const QModelIndex& index) const {
+Qt::ItemFlags SequenceModel::flags(const QModelIndex& index) const {
   if (!index.isValid()) {
     // If the index is invalid, return some dummy flag
     return Qt::ItemIsEnabled;
@@ -144,7 +130,7 @@ Qt::ItemFlags SequenceEditorModel::flags(const QModelIndex& index) const {
   }
 }
 
-void SequenceEditorModel::getPatternsFromRowNumbers(
+void SequenceModel::getPatternsFromRowNumbers(
   QSet<uint32_t>& rows, QSet<Pattern*>& patterns, uint32_t& minRow,
   uint32_t& maxRow) {
 
@@ -164,7 +150,7 @@ void SequenceEditorModel::getPatternsFromRowNumbers(
   }
 }
 
-void SequenceEditorModel::insertRows(QSet<uint32_t>& rows) {
+void SequenceModel::insertRows(QSet<uint32_t>& rows) {
   if (rows.size() == 0) {
     uint32_t lastRow = sequence.getNumPatterns() - 1;
 
@@ -190,7 +176,7 @@ void SequenceEditorModel::insertRows(QSet<uint32_t>& rows) {
   }
 }
 
-void SequenceEditorModel::removeRows(QSet<uint32_t>& rows) {
+void SequenceModel::removeRows(QSet<uint32_t>& rows) {
   if (rows.size() == 0) {
     uint32_t lastRow = sequence.getNumPatterns() - 1;
 

@@ -5,14 +5,13 @@
 #include <stdint.h>
 
 class QTableView;
-class Sequence;
-class SequenceEditorModel;
+class SequenceModel;
 
 class SequenceEditor : public QWidget {
 Q_OBJECT
 
 public:
-  SequenceEditor(Sequence& sequence, QWidget* parent = NULL);
+  SequenceEditor(SequenceModel* model, QWidget* parent = NULL);
 
 public slots:
   void addSequence();
@@ -20,7 +19,7 @@ public slots:
 
 private:
   QTableView* tableView;
-  SequenceEditorModel* model;
+  SequenceModel* model;
 
   void getSelectedRows(QSet<uint32_t>& rowSet);
 };

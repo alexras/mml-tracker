@@ -9,11 +9,11 @@
 #include "TrackBank.h"
 
 class Pattern;
+class PatternFactory;
 
 class Sequence {
 public:
-  Sequence(const TrackBank& trackBank, uint32_t numTracks,
-           const std::vector<QString>& trackNames);
+  Sequence(const TrackBank& trackBank, PatternFactory& patternFactory);
 
   void addNewPatternAfter(Pattern* nextPattern);
   void removePattern(Pattern* pattern);
@@ -25,19 +25,14 @@ public:
   void removeLastPattern();
 
   uint32_t getNumPatterns() const;
-  uint32_t getNumTracks() const;
 
   Pattern* getPattern(uint32_t index) const;
 
-  const QString& getTrackName(uint32_t index) const;
-
-  const TrackBank& getTrackBank() const;
 private:
-  const uint32_t numTracks;
-  const std::vector<QString>& trackNames;
+  const TrackBank& trackBank;
+  PatternFactory& patternFactory;
 
   std::vector<Pattern*> patterns;
-  const TrackBank& trackBank;
 };
 
 
