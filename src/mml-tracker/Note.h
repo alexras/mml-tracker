@@ -10,6 +10,9 @@ class Effect;
 class Note {
 public:
   Note();
+  Note(const Note& note);
+
+  virtual ~Note() {}
 
   void setOctave(uint64_t octave);
   uint64_t getOctave() const;

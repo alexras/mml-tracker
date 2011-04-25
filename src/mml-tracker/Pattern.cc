@@ -3,10 +3,12 @@
 #include "Pattern.h"
 #include "Track.h"
 
-Pattern::Pattern(uint32_t numTracks) {
+Pattern::Pattern(uint32_t numTracks, uint32_t numNotes) {
   assert(numTracks > 0);
 
   this->numTracks = numTracks;
+  this->numNotes = numNotes;
+
   tracks = new Track*[numTracks];
 
   for (uint64_t i = 0; i < numTracks; i++) {

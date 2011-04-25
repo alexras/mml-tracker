@@ -15,9 +15,10 @@ public:
   void setLength(uint32_t length);
   uint32_t getLength() const;
 
-  const Note* getNotes() const;
+  const Note* getNote(uint32_t index) const;
 
-  void addNote(Note* note, uint32_t position);
+  // Deletes any extant note
+  void setNote(Note* note, uint32_t position);
 
 
 

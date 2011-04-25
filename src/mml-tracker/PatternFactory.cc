@@ -7,5 +7,6 @@ PatternFactory::PatternFactory(const PlatformInfo& _platformInfo)
 }
 
 Pattern* PatternFactory::newPattern() {
-  return new Pattern(platformInfo.getNumChannels());
+  return new Pattern(platformInfo.getNumChannels(),
+                     platformInfo.getDefaultNumNotesPerPattern());
 }

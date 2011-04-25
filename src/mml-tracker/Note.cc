@@ -4,7 +4,16 @@ Note::Note() {
   octave = 0;
   pitch = 0;
   volume = 0;
+  silence = false;
   instrument = NULL;
+}
+
+Note::Note(const Note& note) {
+  octave = note.octave;
+  pitch = note.pitch;
+  volume = note.volume;
+  silence = note.silence;
+  instrument = note.instrument;
 }
 
 void Note::setOctave(uint64_t octave) {

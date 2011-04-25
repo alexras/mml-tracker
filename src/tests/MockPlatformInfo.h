@@ -9,6 +9,7 @@ public:
 
 private:
   const static uint32_t NUM_CHANNELS = 3;
+  const static uint32_t NOTES_PER_CHANNEL = 256;
   const static uint32_t DEFAULT_TEMPO = 150;
   const static uint32_t DEFAULT_SPEED = 1;
 };
