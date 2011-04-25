@@ -5,6 +5,7 @@
 #include <QTableView>
 #include <QVBoxLayout>
 
+#include "GuiUtils.h"
 #include "SequenceEditor.h"
 #include "mml-tracker/Sequence.h"
 #include "mml-tracker/gui/ItemSpinBoxDelegate.h"
@@ -42,25 +43,15 @@ SequenceEditor::SequenceEditor(SequenceModel* model, QWidget* parent)
   setLayout(layout);
 }
 
-void SequenceEditor::getSelectedRows(QSet<uint32_t>& rowSet) {
-  QItemSelectionModel* itemSelectionModel = tableView->selectionModel();
-  QModelIndexList indices = itemSelectionModel->selectedIndexes();
-
-  for (QModelIndexList::iterator iter = indices.begin(); iter != indices.end();
-       iter++) {
-    rowSet.insert(iter->row());
-  }
-}
-
 void SequenceEditor::addSequence() {
   QSet<uint32_t> rowSet;
-  getSelectedRows(rowSet);
+  getSelectedRows(*tableView, rowSet);
   model->insertRows(rowSet);
 }
 
 void SequenceEditor::removeSequence() {
   QSet<uint32_t> rowSet;
-  getSelectedRows(rowSet);
+  getSelectedRows(*tableView, rowSet);
   model->removeRows(rowSet);
 }
 

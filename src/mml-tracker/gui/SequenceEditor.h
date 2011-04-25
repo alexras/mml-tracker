@@ -20,8 +20,6 @@ public slots:
 private:
   QTableView* tableView;
   SequenceModel* model;
-
-  void getSelectedRows(QSet<uint32_t>& rowSet);
 };
 
 #endif // MMLTRACKER_SEQUENCE_EDITOR_H
